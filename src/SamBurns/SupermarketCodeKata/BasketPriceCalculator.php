@@ -31,7 +31,16 @@ class BasketPriceCalculator
 
     public function getTotalPrice() : float
     {
-        /** @todo Implement this! */
-        return 0.00;
+        $items = array_merge($this->crisps, $this->drinks, $this->sandwiches);
+        $sum = 0.0;
+
+        foreach ($items as $item) {
+            $sum += $item->getUnitCost();
+        }
+        $mealDeal = new MealDeal([new Crisps(), new Drink(), new Sandwich()], 3.00);
+
+        $mealDeal->apply($items, $sum);
+
+        return $sum;
     }
 }
