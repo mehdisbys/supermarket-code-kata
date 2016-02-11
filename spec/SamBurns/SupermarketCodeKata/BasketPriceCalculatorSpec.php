@@ -73,4 +73,26 @@ class BasketPriceCalculatorSpec extends ObjectBehavior
         // Test total price
         $this->getTotalPrice()->shouldBe(3.99);
     }
+
+    function it_knows_about_the_three_crisps_for_two_offer()
+    {
+        $this->addItem(new Crisps());
+        $this->addItem(new Crisps());
+        $this->addItem(new Crisps());
+
+        $this->getTotalPrice()->shouldBe(1.00);
+    }
+
+    function it_can_handle_meal_deal_and_three_crisps_for_two()
+    {
+        $this->addItem(new Sandwich());
+        $this->addItem(new Crisps());
+        $this->addItem(new Drink());
+
+        $this->addItem(new Crisps());
+        $this->addItem(new Crisps());
+        $this->addItem(new Crisps());
+
+        $this->getTotalPrice()->shouldBe(4.00);
+    }
 }
