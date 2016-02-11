@@ -38,10 +38,7 @@ class BasketPriceCalculator
             $sum += $item->getUnitCost();
         }
         $mealDeal = new Offer([new Crisps(), new Drink(), new Sandwich()], 3.00);
-        $three_for_two = new Offer([new Crisps(), new Crisps(), new Crisps()], 1.00);
-
-       $sum = $mealDeal->apply($items, $sum)->chain([new Crisps(), new Crisps(), new Crisps()], 1.00);
-       // $three_for_two->apply($items,$sum);
+        $sum = $mealDeal->apply($items, $sum)->chain([new Crisps(), new Crisps(), new Crisps()], 1.00);
 
         return $sum;
     }
