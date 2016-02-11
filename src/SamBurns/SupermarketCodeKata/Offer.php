@@ -76,23 +76,11 @@ class Offer
 
     private function countProducts(array $items)
     {
-        $this->countItems['crisps']['count']   = 0;
-        $this->countItems['drinks']['count']   = 0;
-        $this->countItems['sandwich']['count'] = 0;
-
         foreach ($items as $key => $item) {
-            if ($item instanceof Crisps) {
-                $this->countItems['crisps']['instance'] = $item;
-                $this->countItems['crisps']['count']++;
-            }
-            if ($item instanceof Drink) {
-                $this->countItems['drinks']['instance'] = $item;
-                $this->countItems['drinks']['count']++;
-            }
-            if ($item instanceof Sandwich) {
-                $this->countItems['sandwich']['instance'] = $item;
-                $this->countItems['sandwich']['count']++;
-            }
+            $this->countItems[get_class($item)]['instance'] = $item;
+            if(!isset($this->countItems[get_class($item)]['count']))
+                $this->countItems[get_class($item)]['count'] = 0;
+                $this->countItems[get_class($item)]['count']++;
         }
     }
 
