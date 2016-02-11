@@ -1,11 +1,6 @@
 <?php
 namespace SamBurns\SupermarketCodeKata;
 
-
-use SamBurns\SupermarketCodeKata\Item\Crisps;
-use SamBurns\SupermarketCodeKata\Item\Drink;
-use SamBurns\SupermarketCodeKata\Item\Sandwich;
-
 class Offer
 {
     private $meal;

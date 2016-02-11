@@ -48,12 +48,7 @@ class BasketPriceCalculator
     {
         $sum = $this->getTotalWithoutOffers();
 
-        //TODO Factory pattern to generate offers
-        $discounts = new DiscountPipeline($this->getAllItems(),
-            [
-                new Offer([new Crisps(), new Drink(), new Sandwich()], 3.00),
-                new Offer([new Crisps(), new Crisps(), new Crisps()], 1.00)
-            ]);
+        $discounts = new DiscountPipeline($this->getAllItems());
 
         $sum -= $discounts->getTotalDiscount();
 

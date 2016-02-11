@@ -2,6 +2,9 @@
 
 namespace SamBurns\SupermarketCodeKata;
 
+use SamBurns\SupermarketCodeKata\Item\Crisps;
+use SamBurns\SupermarketCodeKata\Item\Drink;
+use SamBurns\SupermarketCodeKata\Item\Sandwich;
 
 class DiscountPipeline
 {
@@ -10,18 +13,26 @@ class DiscountPipeline
     private $items      = [];
     private $sum        = 0.0;
 
-    public function __construct(array $items, array $offers)
+    public function __construct(array $items)
     {
-        $this->items  = $items;
-        $this->offers = $offers;
+        $this->items = $items;
+    }
+
+    public function getAvailableOffers() : array
+    {
+        $this->offers = [
+                new Offer([new Crisps(), new Drink(), new Sandwich()], 3.00),
+                new Offer([new Crisps(), new Crisps(), new Crisps()], 1.00)
+            ];
+        return $this->offers;
     }
 
     public function getTotalDiscount() : float
     {
         $this->countProducts($this->items);
+        $this->getAvailableOffers();
 
-        foreach ($this->offers as $offer)
-        {
+        foreach ($this->offers as $offer) {
             $this->applyOffer($offer);
         }
         return $this->sum;
@@ -50,6 +61,7 @@ class DiscountPipeline
         $expectedCount = count($items);
         $count = 0;
 
+        //TODO refactorise
         foreach ($items as $item) {
             foreach ($this->countItems as &$product) {
                 if (isset($product['instance']) and $product['instance'] instanceof $item) {
