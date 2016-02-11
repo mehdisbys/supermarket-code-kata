@@ -29,16 +29,33 @@ class BasketPriceCalculator
         }
     }
 
-    public function getTotalPrice() : float
+    public function getAllItems()
     {
-        $items = array_merge($this->crisps, $this->drinks, $this->sandwiches);
+        return array_merge($this->crisps, $this->drinks, $this->sandwiches);
+    }
+
+    public function getTotalWithoutOffers()
+    {
+        $items = $this->getAllItems();
         $sum = 0.0;
 
-        foreach ($items as $item) {
-            $sum += $item->getUnitCost();
-        }
-        $mealDeal = new Offer([new Crisps(), new Drink(), new Sandwich()], 3.00);
-        $sum = $mealDeal->apply($items, $sum)->chain([new Crisps(), new Crisps(), new Crisps()], 1.00);
+        foreach ($items as $item) { $sum += $item->getUnitCost(); }
+
+        return $sum;
+    }
+
+    public function getTotalPrice() : float
+    {
+        $sum = $this->getTotalWithoutOffers();
+
+        //TODO Factory pattern to generate offers
+        $discounts = new DiscountPipeline($this->getAllItems(),
+            [
+                new Offer([new Crisps(), new Drink(), new Sandwich()], 3.00),
+                new Offer([new Crisps(), new Crisps(), new Crisps()], 1.00)
+            ]);
+
+        $sum -= $discounts->getTotalDiscount();
 
         return $sum;
     }

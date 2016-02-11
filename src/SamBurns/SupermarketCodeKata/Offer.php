@@ -10,9 +10,7 @@ class Offer
 {
     private $meal;
     private $deal;
-    private $countItems = [];
-    private $priceDifference;
-    private $sum;
+    private $difference = 0;
 
     public function __construct(array $meal, float $deal)
     {
@@ -20,74 +18,17 @@ class Offer
         $this->deal = $deal;
     }
 
-    public function apply(array $items, float &$sum)
+    public function getMeal()
     {
-        $this->countProducts($items);
-        $this->calculateDifference();
-
-        while ($this->customRemoveOneDeal($this->meal)) {
-            $sum -= $this->priceDifference;
-        }
-        $this->sum = $sum;
-        return $this;
+        return $this->meal;
     }
 
-    public function chain(array $meal, float $deal)
+    public function getDiscount() : float
     {
-        $diff = $this->__difference($meal, $deal);
+        if ($this->difference != 0)
+            return $this->difference;
 
-        if ($this->customRemoveOneDeal($meal)) {
-            $this->sum -= $diff;
-        }
-        return $this->sum;
-    }
-
-    private function customRemoveOneDeal(array $items) : bool
-    {
-        $expectedCount = count($items);
-        $count = 0;
-
-        foreach ($items as $item) {
-            foreach ($this->countItems as &$product) {
-                if (isset($product['instance']) and $product['instance'] instanceof $item) {
-                    if ($product['count'] == 0) {
-                        return false;
-                    }
-                    $count++;
-                }
-            }
-        }
-
-        if ($expectedCount == $count) {
-            foreach ($items as $item) {
-                foreach ($this->countItems as &$product) {
-                    if (isset($product['instance']) and $product['instance'] instanceof $item) {
-                        if ($product['count'] == 0) {
-                            return false;
-                        }
-                        $product['count']--;
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private function countProducts(array $items)
-    {
-        foreach ($items as $key => $item) {
-            $this->countItems[get_class($item)]['instance'] = $item;
-            if(!isset($this->countItems[get_class($item)]['count']))
-                $this->countItems[get_class($item)]['count'] = 0;
-                $this->countItems[get_class($item)]['count']++;
-        }
-    }
-
-
-    private function calculateDifference()
-    {
-        $this->priceDifference = $this->__difference($this->meal, $this->deal);
+        return $this->__difference($this->meal, $this->deal);
     }
 
     private function __difference(array $meal, float $deal)
@@ -97,6 +38,7 @@ class Offer
         foreach ($meal as $item) {
             $normalPrice += $item->getUnitCost();
         }
-        return $normalPrice - $deal;
+        $this->difference = $normalPrice - $deal;
+        return $this->difference;
     }
 }
